@@ -10,7 +10,8 @@
 ° Docker (Containerização da aplicação)<br>
 ##
 
-📌 Funcionalidades principais
+📌 Funcionalidades principais <br>
+
 ✅ Cadastro e login de usuários (JWT, Google OAuth) <br>
 ✅ Listagem de motos disponíveis (Filtros por localização, preço e modelo) <br>
 ✅ Reserva e aluguel de motos (Definição de período, cálculo de valor total) <br>
