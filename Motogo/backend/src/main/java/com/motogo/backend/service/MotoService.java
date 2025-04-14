@@ -18,7 +18,11 @@ public class MotoService {
     }
 
     public Motos salvar(Motos moto) {
-        return motoRepository.save(moto);
+        try {
+            return motoRepository.save(moto);
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro inesperado ao salvar a moto: " + e.getMessage(), e);
+        }
     }
 
     public void deletar(Long id) {

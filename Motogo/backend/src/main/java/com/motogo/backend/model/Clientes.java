@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @ToString
 public class Clientes {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,10 +25,10 @@ public class Clientes {
     private String telefone;
 
     @Column(nullable = false)
-    private String endereço;
+    private String endereco;
 
     @Column(nullable = false)
-    private String dataCadastro;
+    private String dataNasc;
 
     public Long getId() {
         return id;
@@ -62,20 +62,20 @@ public class Clientes {
         this.telefone = telefone;
     }
 
-    public String getEndereço() {
-        return endereço;
+    public String getEndereco() {
+        return endereco;
     }
 
-    public void setEndereço(String endereço) {
-        this.endereço = endereço;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
-    public String getDataCadastro() {
-        return dataCadastro;
+    public String getDataNasc() {
+        return dataNasc;
     }
 
-    public void setDataCadastro(String dataCadastro) {
-        this.dataCadastro = dataCadastro;
+    public void setDataNasc(String dataCadastro) {
+        this.dataNasc = dataCadastro;
     }
 
 }
