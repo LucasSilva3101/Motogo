@@ -1,0 +1,4 @@
+# Created at 2025-04-29T17:07:06.060
+Boot Manifest-JAR contains absolute paths in classpath 'D:\workspace\Motogo\Motogo\backend\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+

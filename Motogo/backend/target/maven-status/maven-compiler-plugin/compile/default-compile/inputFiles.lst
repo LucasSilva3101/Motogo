@@ -1,0 +1,14 @@
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\BackendApplication.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\config\CorsGlobalConfig.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\config\SecurityConfig.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\controller\ClientesController.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\controller\MotoController.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\model\Alugueis.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\model\Clientes.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\model\Motos.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\model\StatusAluguel.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\repository\ClientesRepository.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\repository\MotoRepository.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\service\ClientesService.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\service\EmailService.java
+D:\workspace\Motogo\Motogo\backend\src\main\java\com\motogo\backend\service\MotoService.java

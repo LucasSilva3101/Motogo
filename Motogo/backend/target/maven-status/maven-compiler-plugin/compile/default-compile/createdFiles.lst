@@ -1,0 +1,17 @@
+com\motogo\backend\model\Motos$MotosBuilder.class
+com\motogo\backend\config\SecurityConfig.class
+com\motogo\backend\model\Clientes$ClientesBuilder.class
+com\motogo\backend\model\StatusAluguel.class
+com\motogo\backend\repository\MotoRepository.class
+com\motogo\backend\repository\ClientesRepository.class
+com\motogo\backend\controller\ClientesController.class
+com\motogo\backend\BackendApplication.class
+com\motogo\backend\service\ClientesService.class
+com\motogo\backend\controller\MotoController.class
+com\motogo\backend\model\Alugueis.class
+com\motogo\backend\service\MotoService.class
+com\motogo\backend\model\Clientes.class
+com\motogo\backend\service\EmailService.class
+com\motogo\backend\model\Motos.class
+com\motogo\backend\config\CorsGlobalConfig.class
+com\motogo\backend\model\Alugueis$AlugueisBuilder.class
