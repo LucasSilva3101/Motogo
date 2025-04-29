@@ -13,5 +13,4 @@ com\motogo\backend\service\MotoService.class
 com\motogo\backend\model\Clientes.class
 com\motogo\backend\service\EmailService.class
 com\motogo\backend\model\Motos.class
-com\motogo\backend\config\CorsGlobalConfig.class
 com\motogo\backend\model\Alugueis$AlugueisBuilder.class
