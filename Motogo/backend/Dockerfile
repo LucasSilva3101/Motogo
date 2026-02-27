@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # Copia o JAR compilado para dentro do container
-COPY Motogo/backend/target/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY target/backend-0.0.1-SNAPSHOT.jar app.jar
 
 # Expõe a porta usada pela aplicação Spring Boot
 EXPOSE 8080
