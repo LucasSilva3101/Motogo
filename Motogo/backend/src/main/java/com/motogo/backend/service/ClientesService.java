@@ -28,12 +28,12 @@ public class ClientesService {
     public Clientes salvar(Clientes cliente) {
         Clientes clienteSalvo = clientesRepository.save(cliente);
 
-//        try {
-//            emailService.enviarEmailBoasVindas(clienteSalvo.getEmail(), clienteSalvo.getNome());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Ocorreu um erro inesperado ao salvar um cliente: " + e.getMessage(), e);
-//        }
+        try {
+           emailService.enviarEmailBoasVindas(clienteSalvo.getEmail(), clienteSalvo.getNome());
+        } catch (Exception e) {
+           e.printStackTrace();
+           throw new RuntimeException("Ocorreu um erro inesperado ao salvar um cliente: " + e.getMessage(), e);
+       }
 
         return clienteSalvo;
     }
