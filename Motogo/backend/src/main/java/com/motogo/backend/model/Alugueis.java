@@ -3,6 +3,7 @@ package com.motogo.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -17,11 +18,11 @@ public class Alugueis {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
     private Clientes cliente;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moto_id", nullable = false)
     private Motos moto;
 
@@ -32,11 +33,13 @@ public class Alugueis {
     private LocalDate dataFim;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private StatusAluguel status;
 
-    @Column
-    private Double totalPago;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal totalPago;
+
+    // Getters e Setters
 
     public Long getId() {
         return id;
@@ -86,11 +89,11 @@ public class Alugueis {
         this.status = status;
     }
 
-    public Double getTotalPago() {
+    public BigDecimal getTotalPago() {
         return totalPago;
     }
 
-    public void setTotalPago(Double totalPago) {
+    public void setTotalPago(BigDecimal totalPago) {
         this.totalPago = totalPago;
     }
 }
