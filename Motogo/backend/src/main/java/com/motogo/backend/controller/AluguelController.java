@@ -2,6 +2,7 @@ package com.motogo.backend.controller;
 
 import com.motogo.backend.dto.AluguelRequestDTO;
 import com.motogo.backend.dto.AluguelResponseDTO;
+import com.motogo.backend.dto.FinalizarAluguelRequestDTO;
 import com.motogo.backend.model.Alugueis;
 import com.motogo.backend.service.AluguelService;
 import jakarta.validation.Valid;
@@ -29,6 +30,21 @@ public class AluguelController {
     @PostMapping
     public AluguelResponseDTO criarAluguel(@Valid @RequestBody AluguelRequestDTO dto) {
         Alugueis aluguel = aluguelService.criarAluguel(dto);
+        return toResponseDTO(aluguel);
+    }
+
+    @PutMapping("/{id}/finalizar")
+    public AluguelResponseDTO finalizarAluguel(
+            @PathVariable Long id,
+            @Valid @RequestBody FinalizarAluguelRequestDTO dto
+    ) {
+        Alugueis aluguel = aluguelService.finalizarAluguel(id, dto.dataFim());
+        return toResponseDTO(aluguel);
+    }
+
+    @PutMapping("/{id}/cancelar")
+    public AluguelResponseDTO cancelarAluguel(@PathVariable Long id) {
+        Alugueis aluguel = aluguelService.cancelarAluguel(id);
         return toResponseDTO(aluguel);
     }
 

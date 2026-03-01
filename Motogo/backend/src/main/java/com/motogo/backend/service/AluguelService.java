@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -50,7 +51,6 @@ public class AluguelService {
             aluguel.setTotalPago(calcularTotal(moto.getPrecoPorDia(), dto.dataInicio(), dto.dataFim()));
         }
 
-        // marca a moto como indisponível
         moto.setDisponivel(false);
         motoRepository.save(moto);
 
@@ -61,11 +61,75 @@ public class AluguelService {
         }
     }
 
-    private BigDecimal calcularTotal(BigDecimal precoPorDia, java.time.LocalDate inicio, java.time.LocalDate fim) {
+    public Alugueis finalizarAluguel(Long aluguelId, LocalDate dataFim) {
+        Alugueis aluguel = aluguelRepository.findById(aluguelId)
+                .orElseThrow(() -> new RuntimeException("Aluguel não encontrado."));
+
+        if (aluguel.getStatus() == StatusAluguel.FINALIZADO) {
+            throw new RuntimeException("Esse aluguel já foi finalizado.");
+        }
+
+        if (aluguel.getStatus() == StatusAluguel.CANCELADO) {
+            throw new RuntimeException("Não é possível finalizar um aluguel cancelado.");
+        }
+
+        if (dataFim.isBefore(aluguel.getDataInicio())) {
+            throw new RuntimeException("A data de término não pode ser antes da data de início.");
+        }
+
+        aluguel.setDataFim(dataFim);
+
+        // calcula o total com base nos dias e valor da moto
+        BigDecimal total = calcularTotal(
+                aluguel.getMoto().getPrecoPorDia(),
+                aluguel.getDataInicio(),
+                dataFim
+        );
+        aluguel.setTotalPago(total);
+        aluguel.setStatus(StatusAluguel.FINALIZADO);
+
+        Motos moto = aluguel.getMoto();
+        moto.setDisponivel(true);
+        motoRepository.save(moto);
+
+        try {
+            return aluguelRepository.save(aluguel);
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao finalizar o aluguel: " + e.getMessage(), e);
+        }
+    }
+
+    private BigDecimal calcularTotal(BigDecimal precoPorDia, LocalDate inicio, LocalDate fim) {
         long dias = ChronoUnit.DAYS.between(inicio, fim);
         if (dias <= 0) {
             dias = 1;
         }
         return precoPorDia.multiply(BigDecimal.valueOf(dias));
+    }
+
+    public Alugueis cancelarAluguel(Long aluguelId) {
+        Alugueis aluguel = aluguelRepository.findById(aluguelId)
+                .orElseThrow(() -> new RuntimeException("Aluguel não encontrado."));
+
+        if (aluguel.getStatus() == StatusAluguel.FINALIZADO) {
+            throw new RuntimeException("Não dá pra cancelar um aluguel já finalizado.");
+        }
+
+        if (aluguel.getStatus() == StatusAluguel.CANCELADO) {
+            throw new RuntimeException("Esse aluguel já foi cancelado.");
+        }
+
+        aluguel.setStatus(StatusAluguel.CANCELADO);
+
+        // devolve a moto como disponível
+        Motos moto = aluguel.getMoto();
+        moto.setDisponivel(true);
+        motoRepository.save(moto);
+
+        try {
+            return aluguelRepository.save(aluguel);
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao cancelar o aluguel: " + e.getMessage(), e);
+        }
     }
 }
