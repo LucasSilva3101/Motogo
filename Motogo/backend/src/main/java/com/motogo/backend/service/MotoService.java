@@ -2,16 +2,16 @@ package com.motogo.backend.service;
 
 import com.motogo.backend.model.Motos;
 import com.motogo.backend.repository.MotoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MotoService {
 
-    @Autowired
-    private MotoRepository motoRepository;
+    private final MotoRepository motoRepository;
 
     public List<Motos> listarTodas() {
         return motoRepository.findAll();

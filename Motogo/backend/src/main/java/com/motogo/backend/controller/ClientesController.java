@@ -1,22 +1,21 @@
 package com.motogo.backend.controller;
 
 import com.motogo.backend.model.Clientes;
-import com.motogo.backend.model.Motos;
 import com.motogo.backend.service.ClientesService;
-import com.motogo.backend.service.MotoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/clientes")
+@RequiredArgsConstructor
 public class ClientesController {
 
-    @Autowired
-    private ClientesService clientesService;
+    private final ClientesService clientesService;
 
     @GetMapping
     public List<Clientes> listarClientes() {

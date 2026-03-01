@@ -2,17 +2,18 @@ package com.motogo.backend.controller;
 
 import com.motogo.backend.model.Motos;
 import com.motogo.backend.service.MotoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/motos")
+@RequiredArgsConstructor
 public class MotoController {
 
-    @Autowired
-    private MotoService motoService;
+    private final MotoService motoService;
 
     @GetMapping
     public List<Motos> listarMotos() {
