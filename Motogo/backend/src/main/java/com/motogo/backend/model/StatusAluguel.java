@@ -1,7 +1,7 @@
 package com.motogo.backend.model;
 
 public enum StatusAluguel {
-    PENDENTE,
-    CONFIRMADO,
+    EM_ANDAMENTO,
+    FINALIZADO,
     CANCELADO
 }
