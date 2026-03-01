@@ -17,13 +17,12 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 🔹 Erros de validação (@Valid)
+    // 🔹 Erros de validação (@Valid em DTOs)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(
             MethodArgumentNotValidException ex,
             HttpServletRequest request
     ) {
-
         List<Map<String, String>> fieldErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -41,13 +40,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-    // 🔹 RuntimeException genérica
+    // 🔹 Erros genéricos de runtime
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(
             RuntimeException ex,
             HttpServletRequest request
     ) {
-
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
