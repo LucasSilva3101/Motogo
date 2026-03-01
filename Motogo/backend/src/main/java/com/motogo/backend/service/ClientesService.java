@@ -3,9 +3,10 @@ package com.motogo.backend.service;
 import com.motogo.backend.model.Clientes;
 import com.motogo.backend.repository.ClientesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,8 +16,8 @@ public class ClientesService {
     private final ClientesRepository clientesRepository;
     private final EmailService emailService;
 
-    public List<Clientes> listarTodas() {
-        return clientesRepository.findAll();
+    public Page<Clientes> listarTodas(Pageable pageable) {
+        return clientesRepository.findAll(pageable);
     }
 
     public Optional<Clientes> findById(Long id) {

@@ -4,14 +4,14 @@ import com.motogo.backend.dto.ClienteRequestDTO;
 import com.motogo.backend.dto.ClienteResponseDTO;
 import com.motogo.backend.model.Clientes;
 import com.motogo.backend.service.ClientesService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -21,11 +21,9 @@ public class ClientesController {
     private final ClientesService clientesService;
 
     @GetMapping
-    public List<ClienteResponseDTO> listarClientes() {
-        return clientesService.listarTodas()
-                .stream()
-                .map(this::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<ClienteResponseDTO> listarClientes(Pageable pageable) {
+        return clientesService.listarTodas(pageable)
+                .map(this::toResponseDTO);
     }
 
     @GetMapping("/{id}")
@@ -59,8 +57,6 @@ public class ClientesController {
         clientesService.deletar(id);
         return ResponseEntity.noContent().build();
     }
-
-    // --- MÉTODOS DE MAPEAMENTO ---
 
     private ClienteResponseDTO toResponseDTO(Clientes cliente) {
         return new ClienteResponseDTO(

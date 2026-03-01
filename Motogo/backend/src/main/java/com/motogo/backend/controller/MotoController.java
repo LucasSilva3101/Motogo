@@ -6,10 +6,9 @@ import com.motogo.backend.model.Motos;
 import com.motogo.backend.service.MotoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/motos")
@@ -19,11 +18,9 @@ public class MotoController {
     private final MotoService motoService;
 
     @GetMapping
-    public List<MotoResponseDTO> listarMotos() {
-        return motoService.listarTodas()
-                .stream()
-                .map(this::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<MotoResponseDTO> listarMotos(Pageable pageable) {
+        return motoService.listarTodas(pageable)
+                .map(this::toResponseDTO);
     }
 
     @PostMapping

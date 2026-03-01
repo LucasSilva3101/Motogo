@@ -3,9 +3,9 @@ package com.motogo.backend.service;
 import com.motogo.backend.model.Motos;
 import com.motogo.backend.repository.MotoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,8 +13,8 @@ public class MotoService {
 
     private final MotoRepository motoRepository;
 
-    public List<Motos> listarTodas() {
-        return motoRepository.findAll();
+    public Page<Motos> listarTodas(Pageable pageable) {
+        return motoRepository.findAll(pageable);
     }
 
     public Motos salvar(Motos moto) {

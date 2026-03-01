@@ -7,10 +7,9 @@ import com.motogo.backend.model.Alugueis;
 import com.motogo.backend.service.AluguelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/alugueis")
@@ -20,11 +19,9 @@ public class AluguelController {
     private final AluguelService aluguelService;
 
     @GetMapping
-    public List<AluguelResponseDTO> listarAlugueis() {
-        return aluguelService.listarTodos()
-                .stream()
-                .map(this::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<AluguelResponseDTO> listarAlugueis(Pageable pageable) {
+        return aluguelService.listarTodos(pageable)
+                .map(this::toResponseDTO);
     }
 
     @PostMapping
