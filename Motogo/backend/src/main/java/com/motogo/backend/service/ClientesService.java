@@ -1,5 +1,6 @@
 package com.motogo.backend.service;
 
+import com.motogo.backend.exception.ClienteException;
 import com.motogo.backend.model.Clientes;
 import com.motogo.backend.repository.ClientesRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ClientesService {
             emailService.enviarEmailBoasVindas(clienteSalvo.getEmail(), clienteSalvo.getNome());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Ocorreu um erro inesperado ao salvar um cliente: " + e.getMessage(), e);
+            throw new ClienteException("Não consegui enviar o e-mail de boas-vindas.");
         }
 
         return clienteSalvo;
@@ -51,11 +52,15 @@ public class ClientesService {
 
             return clientesRepository.save(cliente);
         } else {
-            throw new RuntimeException("Cliente com ID " + id + " não encontrado.");
+            throw new ClienteException("Cliente com ID " + id + " não foi encontrado.");
         }
     }
 
     public void deletar(Long id) {
-        clientesRepository.deleteById(id);
+        try {
+            clientesRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new ClienteException("Não consegui excluir o cliente com ID " + id + ".");
+        }
     }
 }

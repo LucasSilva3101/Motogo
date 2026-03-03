@@ -40,7 +40,55 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-    // 🔹 Erros genéricos de runtime
+    // 🔹 Erros de CLIENTE
+    @ExceptionHandler(ClienteException.class)
+    public ResponseEntity<Map<String, Object>> handleClienteException(
+            ClienteException ex,
+            HttpServletRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Erro com cliente");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // 🔹 Erros de MOTO
+    @ExceptionHandler(MotoException.class)
+    public ResponseEntity<Map<String, Object>> handleMotoException(
+            MotoException ex,
+            HttpServletRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Erro com moto");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // 🔹 Erros de ALUGUEL
+    @ExceptionHandler(AluguelException.class)
+    public ResponseEntity<Map<String, Object>> handleAluguelException(
+            AluguelException ex,
+            HttpServletRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Erro com aluguel");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // 🔹 Fallback genérico (RuntimeException genérico)
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(
             RuntimeException ex,

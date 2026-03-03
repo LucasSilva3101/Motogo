@@ -1,5 +1,6 @@
 package com.motogo.backend.service;
 
+import com.motogo.backend.exception.MotoException;
 import com.motogo.backend.model.Motos;
 import com.motogo.backend.repository.MotoRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,15 @@ public class MotoService {
         try {
             return motoRepository.save(moto);
         } catch (Exception e) {
-            throw new RuntimeException("Ocorreu um erro inesperado ao salvar a moto: " + e.getMessage(), e);
+            throw new MotoException("Não consegui salvar essa moto.");
         }
     }
 
     public void deletar(Long id) {
-        motoRepository.deleteById(id);
+        try {
+            motoRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new MotoException("Não consegui excluir a moto com ID " + id + ".");
+        }
     }
 }
