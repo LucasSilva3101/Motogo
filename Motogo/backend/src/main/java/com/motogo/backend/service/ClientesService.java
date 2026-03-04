@@ -26,12 +26,16 @@ public class ClientesService {
     }
 
     public Clientes salvar(Clientes cliente) {
+
+        if (clientesRepository.existsByEmailIgnoreCase(cliente.getEmail())) {
+            throw new ClienteException("email ja cadastrado");
+        }
+
         Clientes clienteSalvo = clientesRepository.save(cliente);
 
         try {
             emailService.enviarEmailBoasVindas(clienteSalvo.getEmail(), clienteSalvo.getNome());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ClienteException("Não consegui enviar o e-mail de boas-vindas.");
         }
 
@@ -39,20 +43,31 @@ public class ClientesService {
     }
 
     public Clientes atualizar(Long id, Clientes clienteAtualizado) {
-        Optional<Clientes> clienteExistente = clientesRepository.findById(id);
+        Optional<Clientes> clienteExistenteOpt = clientesRepository.findById(id);
 
-        if (clienteExistente.isPresent()) {
-            Clientes cliente = clienteExistente.get();
-
-            cliente.setNome(clienteAtualizado.getNome());
-            cliente.setEmail(clienteAtualizado.getEmail());
-            cliente.setTelefone(clienteAtualizado.getTelefone());
-            cliente.setEndereco(clienteAtualizado.getEndereco());
-            cliente.setDataNasc(clienteAtualizado.getDataNasc());
-
-            return clientesRepository.save(cliente);
-        } else {
+        if (clienteExistenteOpt.isEmpty()) {
             throw new ClienteException("Cliente com ID " + id + " não foi encontrado.");
+        }
+
+        // 🔹 regra extra: não deixar trocar para um email que já existe em outro cliente
+        if (clientesRepository.existsByEmailIgnoreCaseAndIdNot(
+                clienteAtualizado.getEmail(), id
+        )) {
+            throw new ClienteException("email ja cadastrado");
+        }
+
+        Clientes cliente = clienteExistenteOpt.get();
+
+        cliente.setNome(clienteAtualizado.getNome());
+        cliente.setEmail(clienteAtualizado.getEmail());
+        cliente.setTelefone(clienteAtualizado.getTelefone());
+        cliente.setEndereco(clienteAtualizado.getEndereco());
+        cliente.setDataNasc(clienteAtualizado.getDataNasc());
+
+        try {
+            return clientesRepository.save(cliente);
+        } catch (Exception e) {
+            throw new ClienteException("Não consegui atualizar o cliente com ID " + id + ".");
         }
     }
 
