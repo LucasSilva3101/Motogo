@@ -1,81 +1,40 @@
-    package com.motogo.backend.model;
+package com.motogo.backend.model;
 
-    import jakarta.persistence.*;
-    import lombok.*;
+import jakarta.persistence.*;
+import lombok.*;
 
-    @Entity
-    @Table(name = "clientes")
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    @ToString
-    public class Clientes {
+@Entity
+@Table(name = "clientes")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+public class Clientes {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @Column(nullable = false, length = 100)
-        private String nome;
+    @Column(nullable = false, length = 120)
+    private String nome;
 
-        @Column(nullable = false, length = 50)
-        private String email;
+    @Column(nullable = false, length = 150)
+    private String email;
 
-        @Column(nullable = false)
-        private String telefone;
+    @Column(length = 20)
+    private String telefone;
 
-        @Column(nullable = false)
-        private String endereco;
+    @Column(length = 255)
+    private String endereco;
 
-        @Column(nullable = false)
-        private String dataNasc;
+    // Se seu campo ainda é String, mantenha String
+    // Se você migrar para LocalDate depois, troca aqui.
+    @Column(name = "data_nasc")
+    private String dataNasc;
 
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getNome() {
-            return nome;
-        }
-
-        public void setNome(String nome) {
-            this.nome = nome;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getTelefone() {
-            return telefone;
-        }
-
-        public void setTelefone(String telefone) {
-            this.telefone = telefone;
-        }
-
-        public String getEndereco() {
-            return endereco;
-        }
-
-        public void setEndereco(String endereco) {
-            this.endereco = endereco;
-        }
-
-        public String getDataNasc() {
-            return dataNasc;
-        }
-
-        public void setDataNasc(String dataCadastro) {
-            this.dataNasc = dataCadastro;
-        }
-
-    }
+    @OneToOne
+    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+    private Usuario usuario;
+}
