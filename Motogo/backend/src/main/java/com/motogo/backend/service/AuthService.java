@@ -1,6 +1,7 @@
 package com.motogo.backend.service;
 
 import com.motogo.backend.dto.*;
+import com.motogo.backend.exception.AuthException;
 import com.motogo.backend.exception.ClienteException;
 import com.motogo.backend.model.*;
 import com.motogo.backend.repository.*;
@@ -49,10 +50,10 @@ public class AuthService {
     public AuthResponseDTO login(LoginRequestDTO dto) {
 
         Usuario usuario = usuarioRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new ClienteException("usuario nao encontrado"));
+                .orElseThrow(() -> new AuthException("usuario nao encontrado"));
 
         if (!passwordEncoder.matches(dto.password(), usuario.getPassword())) {
-            throw new ClienteException("senha incorreta");
+            throw new AuthException("senha incorreta");
         }
 
         String token = jwtService.generateToken(usuario.getEmail());

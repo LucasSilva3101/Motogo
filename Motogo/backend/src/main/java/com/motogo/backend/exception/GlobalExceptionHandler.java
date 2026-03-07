@@ -110,4 +110,20 @@ public class GlobalExceptionHandler {
         map.put("message", fieldError.getDefaultMessage());
         return map;
     }
+
+    // 🔹 Erros de AUTENTICAÇÃO
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthException(
+            AuthException ex,
+            HttpServletRequest request
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("error", "Erro de autenticação");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    }
 }
