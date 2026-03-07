@@ -1,6 +1,6 @@
 package com.motogo.backend.service;
 
-import com.motogo.backend.model.Usuario;
+import com.motogo.backend.model.UserAdm;
 import com.motogo.backend.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.*;
@@ -15,13 +15,13 @@ public class UsuarioService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        UserAdm userAdm = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("usuario nao encontrado"));
 
         return User.builder()
-                .username(usuario.getEmail())
-                .password(usuario.getPassword())
-                .roles(usuario.getRole().name().replace("ROLE_", ""))
+                .username(userAdm.getEmail())
+                .password(userAdm.getPassword())
+                .roles(userAdm.getRole().name().replace("ROLE_", ""))
                 .build();
     }
 }

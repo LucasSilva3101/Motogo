@@ -86,6 +86,7 @@ public class AluguelService {
                 aluguel.getDataInicio(),
                 dataFim
         );
+
         aluguel.setTotalPago(total);
         aluguel.setStatus(StatusAluguel.FINALIZADO);
 

@@ -33,26 +33,20 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> {}) // usa o bean CorsConfigurationSource abaixo
+                .cors(cors -> {})
                 .headers(headers -> headers
-                        // evita warning deprecado: usa method reference
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // libera H2 Console e Auth
                         .requestMatchers("/h2-console/**", "/api/auth/**").permitAll()
-
-                        // preflight do CORS
+                        .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // todo o resto exige token
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                // JWT filter antes do filtro padrão de auth
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -78,10 +72,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
-
         return provider;
     }
 

@@ -73,6 +73,7 @@ public class ClientesController {
         Clientes cliente = new Clientes();
         cliente.setNome(dto.nome());
         cliente.setEmail(dto.email());
+        cliente.setSenha(dto.senha());
         cliente.setTelefone(dto.telefone());
         cliente.setEndereco(dto.endereco());
         cliente.setDataNasc(dto.dataNasc());

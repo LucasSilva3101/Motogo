@@ -3,6 +3,8 @@ package com.motogo.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "clientes")
 @Getter
@@ -17,24 +19,18 @@ public class Clientes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 120)
     private String nome;
 
-    @Column(nullable = false, length = 150)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(length = 20)
+    @Column(nullable = false)
+    private String senha;
+
     private String telefone;
 
-    @Column(length = 255)
     private String endereco;
 
-    // Se seu campo ainda é String, mantenha String
-    // Se você migrar para LocalDate depois, troca aqui.
     @Column(name = "data_nasc")
-    private String dataNasc;
-
-    @OneToOne
-    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
-    private Usuario usuario;
+    private LocalDate dataNasc;
 }

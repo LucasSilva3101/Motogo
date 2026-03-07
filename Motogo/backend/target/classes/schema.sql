@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS alugueis (
     data_inicio DATE NOT NULL,
     data_fim DATE,
     status ENUM('EM_ANDAMENTO', 'FINALIZADO', 'CANCELADO') NOT NULL DEFAULT 'EM_ANDAMENTO',
-    total_pago DOUBLE,
+    total_pago DECIMAL,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id),
     FOREIGN KEY (moto_id) REFERENCES motos(id)
 );

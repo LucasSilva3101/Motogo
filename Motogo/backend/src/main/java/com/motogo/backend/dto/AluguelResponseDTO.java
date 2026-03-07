@@ -1,6 +1,5 @@
 package com.motogo.backend.dto;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record AluguelResponseDTO(
@@ -12,5 +11,5 @@ public record AluguelResponseDTO(
         LocalDate dataInicio,
         LocalDate dataFim,
         String status,
-        BigDecimal totalPago
+        java.math.BigDecimal totalPago
 ) { }

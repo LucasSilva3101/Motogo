@@ -25,38 +25,36 @@ public class AuthService {
             throw new ClienteException("email ja cadastrado");
         }
 
-        Usuario usuario = Usuario.builder()
+        UserAdm userAdm = UserAdm.builder()
                 .email(dto.email())
                 .password(passwordEncoder.encode(dto.password()))
-                .role(Role.ROLE_CLIENTE)
                 .build();
 
-        usuarioRepository.save(usuario);
+        usuarioRepository.save(userAdm);
 
         Clientes cliente = new Clientes();
         cliente.setNome(dto.nome());
         cliente.setEmail(dto.email());
         cliente.setTelefone(dto.telefone());
         cliente.setEndereco(dto.endereco());
-        cliente.setUsuario(usuario);
 
         clientesRepository.save(cliente);
 
-        String token = jwtService.generateToken(usuario.getEmail());
+        String token = jwtService.generateToken(userAdm.getEmail());
 
         return new AuthResponseDTO(token);
     }
 
     public AuthResponseDTO login(LoginRequestDTO dto) {
 
-        Usuario usuario = usuarioRepository.findByEmail(dto.email())
+        UserAdm userAdm = usuarioRepository.findByEmail(dto.email())
                 .orElseThrow(() -> new AuthException("usuario nao encontrado"));
 
-        if (!passwordEncoder.matches(dto.password(), usuario.getPassword())) {
+        if (!passwordEncoder.matches(dto.password(), userAdm.getPassword())) {
             throw new AuthException("senha incorreta");
         }
 
-        String token = jwtService.generateToken(usuario.getEmail());
+        String token = jwtService.generateToken(userAdm.getEmail());
 
         return new AuthResponseDTO(token);
     }
