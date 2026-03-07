@@ -1,10 +1,16 @@
 package com.motogo.backend.service;
 
-import com.motogo.backend.dto.*;
+import com.motogo.backend.dto.request.auth.AdminLoginRequest;
+import com.motogo.backend.dto.request.auth.AdminRegisterRequest;
+import com.motogo.backend.dto.request.auth.ClienteLoginRequest;
+import com.motogo.backend.dto.request.auth.ClienteRegisterRequest;
+import com.motogo.backend.dto.response.auth.AuthResponse;
 import com.motogo.backend.exception.AuthException;
-import com.motogo.backend.exception.ClienteException;
-import com.motogo.backend.model.*;
-import com.motogo.backend.repository.*;
+import com.motogo.backend.model.Cliente;
+import com.motogo.backend.model.Role;
+import com.motogo.backend.model.UserAdm;
+import com.motogo.backend.repository.ClienteRepository;
+import com.motogo.backend.repository.UserAdmRepository;
 import com.motogo.backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,48 +20,74 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final ClientesRepository clientesRepository;
+    private final ClienteRepository clienteRepository;
+    private final UserAdmRepository userAdmRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public AuthResponseDTO register(RegisterRequestDTO dto) {
-
-        if (usuarioRepository.existsByEmailIgnoreCase(dto.email())) {
-            throw new ClienteException("email ja cadastrado");
+    public AuthResponse registerCliente(ClienteRegisterRequest request) {
+        if (clienteRepository.existsByEmailIgnoreCase(request.email())) {
+            throw new AuthException("E-mail de cliente já cadastrado.");
         }
 
-        UserAdm userAdm = UserAdm.builder()
-                .email(dto.email())
-                .password(passwordEncoder.encode(dto.password()))
+        Cliente cliente = Cliente.builder()
+                .nome(request.nome())
+                .email(request.email())
+                .senha(passwordEncoder.encode(request.senha()))
+                .telefone(request.telefone())
+                .endereco(request.endereco())
+                .dataNasc(request.dataNasc())
                 .build();
 
-        usuarioRepository.save(userAdm);
+        clienteRepository.save(cliente);
 
-        Clientes cliente = new Clientes();
-        cliente.setNome(dto.nome());
-        cliente.setEmail(dto.email());
-        cliente.setTelefone(dto.telefone());
-        cliente.setEndereco(dto.endereco());
+        String token = jwtService.generateToken(cliente.getEmail(), Role.CLIENTE.name());
 
-        clientesRepository.save(cliente);
-
-        String token = jwtService.generateToken(userAdm.getEmail());
-
-        return new AuthResponseDTO(token);
+        return new AuthResponse(token, Role.CLIENTE.name(), cliente.getEmail());
     }
 
-    public AuthResponseDTO login(LoginRequestDTO dto) {
+    public AuthResponse loginCliente(ClienteLoginRequest request) {
+        Cliente cliente = clienteRepository.findByEmailIgnoreCase(request.email())
+                .orElseThrow(() -> new AuthException("Cliente não encontrado."));
 
-        UserAdm userAdm = usuarioRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new AuthException("usuario nao encontrado"));
-
-        if (!passwordEncoder.matches(dto.password(), userAdm.getPassword())) {
-            throw new AuthException("senha incorreta");
+        if (!passwordEncoder.matches(request.senha(), cliente.getSenha())) {
+            throw new AuthException("Senha inválida.");
         }
 
-        String token = jwtService.generateToken(userAdm.getEmail());
+        String token = jwtService.generateToken(cliente.getEmail(), Role.CLIENTE.name());
 
-        return new AuthResponseDTO(token);
+        return new AuthResponse(token, Role.CLIENTE.name(), cliente.getEmail());
+    }
+
+    public AuthResponse registerAdmin(AdminRegisterRequest request) {
+        if (userAdmRepository.existsByEmailIgnoreCase(request.email())) {
+            throw new AuthException("E-mail de admin já cadastrado.");
+        }
+
+        UserAdm admin = UserAdm.builder()
+                .nome(request.nome())
+                .email(request.email())
+                .senha(passwordEncoder.encode(request.senha()))
+                .role(Role.ADMIN)
+                .build();
+
+        userAdmRepository.save(admin);
+
+        String token = jwtService.generateToken(admin.getEmail(), admin.getRole().name());
+
+        return new AuthResponse(token, admin.getRole().name(), admin.getEmail());
+    }
+
+    public AuthResponse loginAdmin(AdminLoginRequest request) {
+        UserAdm admin = userAdmRepository.findByEmailIgnoreCase(request.email())
+                .orElseThrow(() -> new AuthException("Administrador não encontrado."));
+
+        if (!passwordEncoder.matches(request.senha(), admin.getSenha())) {
+            throw new AuthException("Senha inválida.");
+        }
+
+        String token = jwtService.generateToken(admin.getEmail(), admin.getRole().name());
+
+        return new AuthResponse(token, admin.getRole().name(), admin.getEmail());
     }
 }

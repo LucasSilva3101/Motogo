@@ -1,45 +1,37 @@
-CREATE TABLE IF NOT EXISTS motos (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    modelo VARCHAR(255) NOT NULL,
-    marca VARCHAR(255) NOT NULL,
-    preco_por_dia DOUBLE NOT NULL,
-    disponivel BOOLEAN NOT NULL
+CREATE TABLE IF NOT EXISTS users_adm (
+                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                         nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS clientes (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
+                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                        nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    telefone VARCHAR(15),
+    senha VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20),
     endereco VARCHAR(255),
-    data_nasc TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    data_nasc DATE
+    );
+
+CREATE TABLE IF NOT EXISTS motos (
+                                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                     modelo VARCHAR(255) NOT NULL,
+    marca VARCHAR(255) NOT NULL,
+    preco_por_dia DECIMAL(10,2) NOT NULL,
+    disponivel BOOLEAN NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS alugueis (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id BIGINT NOT NULL,
-    moto_id BIGINT NOT NULL,
-    data_inicio DATE NOT NULL,
-    data_fim DATE,
-    status ENUM('EM_ANDAMENTO', 'FINALIZADO', 'CANCELADO') NOT NULL DEFAULT 'EM_ANDAMENTO',
-    total_pago DECIMAL,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id),
-    FOREIGN KEY (moto_id) REFERENCES motos(id)
-);
-
-CREATE OR REPLACE VIEW alugueis_com_detalhes AS
-SELECT
-    a.id AS aluguel_id,
-    a.cliente_id,
-    c.nome AS cliente_nome,
-    a.moto_id,
-    m.marca AS moto_marca,
-    m.modelo AS moto_modelo,
-    a.data_inicio,
-    a.data_fim,
-    a.status,
-    a.total_pago
-FROM alugueis a
-         JOIN clientes c ON a.cliente_id = c.id
-         JOIN motos m ON a.moto_id = m.id;
-
+                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                        cliente_id BIGINT NOT NULL,
+                                        moto_id BIGINT NOT NULL,
+                                        data_inicio DATE NOT NULL,
+                                        data_fim DATE,
+                                        status VARCHAR(20) NOT NULL,
+    total_pago DECIMAL(10,2),
+    CONSTRAINT fk_aluguel_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+    CONSTRAINT fk_aluguel_moto FOREIGN KEY (moto_id) REFERENCES motos(id)
+    );

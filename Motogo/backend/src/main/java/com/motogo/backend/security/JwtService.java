@@ -16,19 +16,20 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration-ms:3600000}") // 1h default
+    @Value("${jwt.expiration-ms:3600000}")
     private long expirationMs;
 
     private Key signingKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String subjectEmail) {
+    public String generateToken(String email, String role) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expirationMs);
 
         return Jwts.builder()
-                .setSubject(subjectEmail)
+                .setSubject(email)
+                .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
                 .signWith(signingKey())
@@ -39,11 +40,13 @@ public class JwtService {
         return parseClaims(token).getSubject();
     }
 
+    public String extractRole(String token) {
+        return parseClaims(token).get("role", String.class);
+    }
+
     public boolean isTokenValid(String token) {
         try {
-            Claims claims = parseClaims(token);
-            Date exp = claims.getExpiration();
-            return exp != null && exp.after(new Date());
+            return parseClaims(token).getExpiration().after(new Date());
         } catch (Exception e) {
             return false;
         }

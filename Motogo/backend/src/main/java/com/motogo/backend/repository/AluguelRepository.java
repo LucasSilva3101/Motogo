@@ -1,9 +1,10 @@
 package com.motogo.backend.repository;
 
-import com.motogo.backend.model.Alugueis;
+import com.motogo.backend.model.Aluguel;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface AluguelRepository extends JpaRepository<Alugueis, Long> {
+import java.util.List;
+
+public interface AluguelRepository extends JpaRepository<Aluguel, Long> {
+    List<Aluguel> findByClienteId(Long clienteId);
 }
